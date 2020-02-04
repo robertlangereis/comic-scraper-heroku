@@ -1,8 +1,4 @@
-// const express = require('express');
-// app = express();
-// const cron = require('node-cron');
 
-// require environment variables
 const {
 	listing_url,
 	phone_nr,
@@ -11,10 +7,8 @@ const {
 	api_account,
 	cloud_id,
 	cloud_key,
-	cloud_secret,
-	port
+	cloud_secret
 } = require('./config');
-// console.log('listing_url', listing_url);
 
 const Clipper = require('image-clipper');
 const mergeImg = require('merge-img');
@@ -117,20 +111,20 @@ const run = async function() {
 		});
 	});
 
-	// const deleteOriginal = async () => {
-	// 	await fs.unlink(`./image/${date}.png`, () =>
-	// 		console.log('deleted original comic!')
-	// 	);
-	// 	await fs.unlink(`./image/${date}-1.png`, () =>
-	// 		console.log('deleted 1st drawing!')
-	// 	);
-	// 	await fs.unlink(`./image/${date}-2.png`, () =>
-	// 		console.log('deleted 2nd drawing!')
-	// 	);
-	// 	await fs.unlink(`./image/${date}-3.png`, () =>
-	// 		console.log('deleted 3rd drawing!')
-	// 	);
-    // };
+	const deleteOriginal = async () => {
+		await fs.unlink(`./image/${date}.png`, () =>
+			console.log('deleted original comic!')
+		);
+		await fs.unlink(`./image/${date}-1.png`, () =>
+			console.log('deleted 1st drawing!')
+		);
+		await fs.unlink(`./image/${date}-2.png`, () =>
+			console.log('deleted 2nd drawing!')
+		);
+		await fs.unlink(`./image/${date}-3.png`, () =>
+			console.log('deleted 3rd drawing!')
+		);
+    };
     
     const sentImageWithWhatsapp = async url =>
     await client.messages
@@ -161,37 +155,15 @@ const run = async function() {
 		cropSecondPicture +
 		cropThirdPicture +
 		mergePictures +
-		// deleteOriginal() +
+		deleteOriginal() +
 		cloudinaryUpload();
 
-	// !Promise.allSettled not yet working in this form
-	// let finalResult = Promise.allSettled(
-	// 	[
-	// 	webScrape, cropFirstPicture,
-	// 	cropSecondPicture,
-	// 	cropThirdPicture,
-	// 	mergePictures,
-	// 	deleteOriginal,
-	// 	cloudinaryUpload]
-	// ).then(results => results.forEach(result => console.log(result.status)));
-
+	
 	return await finalResult;
 };
 
-// cron.schedule('30 12 * * 1-6', function() {
-// 	try {
-// 		run();
-// 	} catch (error) {
-// 		console.log('error', error);
-// 	}
-// });
-
-// cron.schedule('00 14 * * 1-6', function() {
 try {
 	run();
 } catch (error) {
 	console.log('error', error);
 }
-// });
-
-// app.listen(port);
