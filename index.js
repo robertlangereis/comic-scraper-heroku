@@ -130,17 +130,8 @@ const run = async function() {
 		await fs.unlink(`./sliced/${date}-3.png`, () =>
 			console.log('deleted 3rd drawing!')
 		);
-	};
-
-    const cloudinaryUpload = async () => console.log('cloudinaryUpload');
-    await cloudinary.uploader.upload(`./image/${date}-verticle.png`, function(
-        error,
-        result
-    ) {
-        // image.cloudinaryImageUrl = result.url;
-        error && console.log(error);
-        sentImageWithWhatsapp(result.url);
-    });
+    };
+    
     const sentImageWithWhatsapp = async url =>
     await client.messages
         .create({
@@ -151,6 +142,17 @@ const run = async function() {
         })
         .then(msg => console.log('Msg ID = ', msg.sid))
         .catch(console.error);
+
+    const cloudinaryUpload = async () => console.log('cloudinaryUpload');
+    await cloudinary.uploader.upload(`./image/${date}-verticle.png`, function(
+        error,
+        result
+    ) {
+        // image.cloudinaryImageUrl = result.url;
+        error && console.log(error);
+        sentImageWithWhatsapp(result.url);
+    });
+  
 
 
 	let finalResult =
