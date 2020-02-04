@@ -82,7 +82,7 @@ const run = async function() {
 	const cropFirstPicture = await new Promise(resolve => {
 		console.log('cropFirstPicture');
 		Clipper(`./image/${date}.png`, function() {
-			this.crop(0, 0, 535, 458).toFile(`./sliced/${date}-1.png`, function() {
+			this.crop(0, 0, 535, 458).toFile(`./image/${date}-1.png`, function() {
 				resolve(console.log('saved 1st drawing!'));
 			});
 		});
@@ -90,7 +90,7 @@ const run = async function() {
 	const cropSecondPicture = await new Promise(resolve => {
 		console.log('cropSecondPicture');
 		Clipper(`./image/${date}.png`, function() {
-			this.crop(535, 0, 535, 458).toFile(`./sliced/${date}-2.png`, function() {
+			this.crop(535, 0, 535, 458).toFile(`./image/${date}-2.png`, function() {
 				resolve(console.log('saved 2nd drawing!'));
 			});
 		});
@@ -98,7 +98,7 @@ const run = async function() {
 	const cropThirdPicture = await new Promise(resolve => {
 		console.log('cropThirdPicture');
 		Clipper(`./image/${date}.png`, function() {
-			this.crop(1070, 0, 535, 458).toFile(`./sliced/${date}-3.png`, function() {
+			this.crop(1070, 0, 535, 458).toFile(`./image/${date}-3.png`, function() {
 				resolve(console.log('saved 3rd drawing!'));
 			});
 		});
@@ -107,9 +107,9 @@ const run = async function() {
 	const mergePictures = await new Promise(resolve => {
 		console.log('mergePictures');
 		mergeImg([
-			{ src: `./sliced/${date}-1.png`},
-			{ src: `./sliced/${date}-2.png`, offsetX: -535, offsetY: 458 },
-			{ src: `./sliced/${date}-3.png`, offsetX: -535, offsetY: 916 }
+			{ src: `./image/${date}-1.png`},
+			{ src: `./image/${date}-2.png`, offsetX: -535, offsetY: 458 },
+			{ src: `./image/${date}-3.png`, offsetX: -535, offsetY: 916 }
 		]).then(img => {
 			return img.write(`./image/${date}-verticle.png`, () =>
 				resolve(console.log('done merging images'))
@@ -121,13 +121,13 @@ const run = async function() {
 	// 	await fs.unlink(`./image/${date}.png`, () =>
 	// 		console.log('deleted original comic!')
 	// 	);
-	// 	await fs.unlink(`./sliced/${date}-1.png`, () =>
+	// 	await fs.unlink(`./image/${date}-1.png`, () =>
 	// 		console.log('deleted 1st drawing!')
 	// 	);
-	// 	await fs.unlink(`./sliced/${date}-2.png`, () =>
+	// 	await fs.unlink(`./image/${date}-2.png`, () =>
 	// 		console.log('deleted 2nd drawing!')
 	// 	);
-	// 	await fs.unlink(`./sliced/${date}-3.png`, () =>
+	// 	await fs.unlink(`./image/${date}-3.png`, () =>
 	// 		console.log('deleted 3rd drawing!')
 	// 	);
     // };
@@ -144,7 +144,7 @@ const run = async function() {
         .catch(console.error);
 
     const cloudinaryUpload = async () => console.log('cloudinaryUpload');
-    await cloudinary.uploader.upload(`./image/${date}-verticle.png`, function(
+    await cloudinary.uploader.upload(`./image/${date}-1.png`, function(
         error,
         result
     ) {
@@ -161,7 +161,7 @@ const run = async function() {
 		cropSecondPicture +
 		cropThirdPicture +
 		mergePictures +
-		deleteOriginal() +
+		// deleteOriginal() +
 		cloudinaryUpload();
 
 	// !Promise.allSettled not yet working in this form
