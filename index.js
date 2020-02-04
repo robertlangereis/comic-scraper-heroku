@@ -108,8 +108,8 @@ const run = async function() {
 		console.log('mergePictures');
 		mergeImg([
 			{ src: `./image/${date}-1.png`},
-			{ src: `./image/${date}-2.png`, offsetX: -535, offsetY: 458 },
-			{ src: `./image/${date}-3.png`, offsetX: -535, offsetY: 916 }
+			{ src: `./image/${date}-2.png`, offsetX: -265, offsetY: 227 },
+			{ src: `./image/${date}-3.png`, offsetX: -265, offsetY: 454 }
 		]).then(img => {
 			return img.write(`./image/${date}-verticle.png`, () =>
 				resolve(console.log('done merging images'))
