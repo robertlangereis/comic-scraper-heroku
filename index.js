@@ -82,7 +82,7 @@ const run = async function() {
 	const cropFirstPicture = await new Promise(resolve => {
 		console.log('cropFirstPicture');
 		Clipper(`./image/${date}.png`, function() {
-			this.crop(0, 0, 535, 458).toFile(`./image/${date}-1.png`, function() {
+			this.crop(0, 0, 265, 227).toFile(`./image/${date}-1.png`, function() {
 				resolve(console.log('saved 1st drawing!'));
 			});
 		});
@@ -90,7 +90,7 @@ const run = async function() {
 	const cropSecondPicture = await new Promise(resolve => {
 		console.log('cropSecondPicture');
 		Clipper(`./image/${date}.png`, function() {
-			this.crop(535, 0, 535, 458).toFile(`./image/${date}-2.png`, function() {
+			this.crop(265, 0, 265, 227).toFile(`./image/${date}-2.png`, function() {
 				resolve(console.log('saved 2nd drawing!'));
 			});
 		});
@@ -98,7 +98,7 @@ const run = async function() {
 	const cropThirdPicture = await new Promise(resolve => {
 		console.log('cropThirdPicture');
 		Clipper(`./image/${date}.png`, function() {
-			this.crop(1070, 0, 535, 458).toFile(`./image/${date}-3.png`, function() {
+			this.crop(530, 0, 265, 227).toFile(`./image/${date}-3.png`, function() {
 				resolve(console.log('saved 3rd drawing!'));
 			});
 		});
