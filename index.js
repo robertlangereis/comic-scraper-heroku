@@ -144,7 +144,7 @@ const run = async function() {
         .catch(console.error);
 
     const cloudinaryUpload = async () => console.log('cloudinaryUpload');
-    await cloudinary.uploader.upload(`./image/${date}.png`, function(
+    await cloudinary.uploader.upload(`./image/${date}-verticle.png`, function(
         error,
         result
     ) {
