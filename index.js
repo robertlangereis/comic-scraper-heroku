@@ -132,27 +132,26 @@ const run = async function() {
 		);
 	};
 
-	const sentImageWithWhatsapp = async () =>
-		console.log('sentImageWithWhatsapp');
-	await client.messages
-		.create({
-			from: 'whatsapp:+14155238886',
-			body: `The Garfield of today! ${date}`,
-			to: `whatsapp:${phone_nr}`,
-			mediaUrl: listing_url
-		})
-		.then(msg => console.log('Msg ID = ', msg.sid))
-		.catch(console.error);
+    const cloudinaryUpload = async () => console.log('cloudinaryUpload');
+    await cloudinary.uploader.upload(`./image/${date}-verticle.png`, function(
+        error,
+        result
+    ) {
+        // image.cloudinaryImageUrl = result.url;
+        error && console.log(error);
+        sentImageWithWhatsapp(result.url);
+    });
+    const sentImageWithWhatsapp = async url =>
+    await client.messages
+        .create({
+            from: 'whatsapp:+14155238886',
+            body: `The Garfield of today! ${date}`,
+            to: `whatsapp:${phone_nr}`,
+            mediaUrl: url
+        })
+        .then(msg => console.log('Msg ID = ', msg.sid))
+        .catch(console.error);
 
-	const cloudinaryUpload = async () => console.log('cloudinaryUpload');
-	await cloudinary.uploader.upload(`./image/${date}-verticle.png`, function(
-		error,
-		result
-	) {
-		// image.cloudinaryImageUrl = result.url;
-		error && console.log(error);
-		sentImageWithWhatsapp(result.url);
-	});
 
 	let finalResult =
 		webScrape +
