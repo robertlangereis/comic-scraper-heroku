@@ -107,7 +107,7 @@ const run = async function() {
 	const mergePictures = await new Promise(resolve => {
 		console.log('mergePictures');
 		mergeImg([
-			{ src: `./sliced/${date}-1.png` },
+			{ src: `./sliced/${date}-1.png`},
 			{ src: `./sliced/${date}-2.png`, offsetX: -535, offsetY: 458 },
 			{ src: `./sliced/${date}-3.png`, offsetX: -535, offsetY: 916 }
 		]).then(img => {
@@ -117,20 +117,20 @@ const run = async function() {
 		});
 	});
 
-	const deleteOriginal = async () => {
-		await fs.unlink(`./image/${date}.png`, () =>
-			console.log('deleted original comic!')
-		);
-		await fs.unlink(`./sliced/${date}-1.png`, () =>
-			console.log('deleted 1st drawing!')
-		);
-		await fs.unlink(`./sliced/${date}-2.png`, () =>
-			console.log('deleted 2nd drawing!')
-		);
-		await fs.unlink(`./sliced/${date}-3.png`, () =>
-			console.log('deleted 3rd drawing!')
-		);
-    };
+	// const deleteOriginal = async () => {
+	// 	await fs.unlink(`./image/${date}.png`, () =>
+	// 		console.log('deleted original comic!')
+	// 	);
+	// 	await fs.unlink(`./sliced/${date}-1.png`, () =>
+	// 		console.log('deleted 1st drawing!')
+	// 	);
+	// 	await fs.unlink(`./sliced/${date}-2.png`, () =>
+	// 		console.log('deleted 2nd drawing!')
+	// 	);
+	// 	await fs.unlink(`./sliced/${date}-3.png`, () =>
+	// 		console.log('deleted 3rd drawing!')
+	// 	);
+    // };
     
     const sentImageWithWhatsapp = async url =>
     await client.messages
