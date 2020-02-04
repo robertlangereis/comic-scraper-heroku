@@ -1,4 +1,4 @@
-
+//import the environment variables from the config file
 const {
 	listing_url,
 	phone_nr,
@@ -10,21 +10,28 @@ const {
 	cloud_secret
 } = require('./config');
 
+// Clipper allows for the cropping of the comic images
 const Clipper = require('image-clipper');
-const mergeImg = require('merge-img');
-const cloudinary = require('cloudinary').v2;
 
+// Merging the cropped images into one (rearranged) comic once more
+const mergeImg = require('merge-img');
+
+// fs: for deleting and addressing certain files in the directories, for instance deleting the cropped images after being merged
 const fs = require('fs');
+
+// Cheerio is a simple jQuery for Node.js library. Cheerio makes it easy to select, edit, and view DOM elements.
 const cheerio = require('cheerio');
 const Nightmare = require('nightmare');
 const nightmare = Nightmare({ show: false });
 const screenshotSelector = require('nightmare-screenshot-selector');
 Nightmare.action('screenshotSelector', screenshotSelector);
 
+// Twilio: a service provider for sending the final image via Whatsapp
 const twilio = require('twilio');
 const client = twilio(api_account, key);
 
-// let image = { cloudinaryImageUrl: '' };
+// Cloudinary used for storing the final comic image, as it has to be sent as a image final url using Twilio
+const cloudinary = require('cloudinary').v2;
 cloudinary.config({
 	cloud_name: cloud_id,
 	api_key: cloud_key,
@@ -55,8 +62,6 @@ const getData = html => {
 };
 
 const run = async function() {
-	console.log('RUN STARTING');
-	console.log('listing_url', listing_url);
 	const webScrape = await nightmare
 		.goto(listing_url)
 		.wait('.gc-card__image.gc-card__image--overlay')
@@ -74,7 +79,6 @@ const run = async function() {
 		});
 
 	const cropFirstPicture = await new Promise(resolve => {
-		console.log('cropFirstPicture');
 		Clipper(`./image/${date}.png`, function() {
 			this.crop(0, 0, 265, 227).toFile(`./image/${date}-1.png`, function() {
 				resolve(console.log('saved 1st drawing!'));
@@ -82,7 +86,6 @@ const run = async function() {
 		});
 	});
 	const cropSecondPicture = await new Promise(resolve => {
-		console.log('cropSecondPicture');
 		Clipper(`./image/${date}.png`, function() {
 			this.crop(265, 0, 265, 227).toFile(`./image/${date}-2.png`, function() {
 				resolve(console.log('saved 2nd drawing!'));
@@ -90,7 +93,6 @@ const run = async function() {
 		});
 	});
 	const cropThirdPicture = await new Promise(resolve => {
-		console.log('cropThirdPicture');
 		Clipper(`./image/${date}.png`, function() {
 			this.crop(530, 0, 265, 227).toFile(`./image/${date}-3.png`, function() {
 				resolve(console.log('saved 3rd drawing!'));
@@ -99,9 +101,8 @@ const run = async function() {
 	});
 
 	const mergePictures = await new Promise(resolve => {
-		console.log('mergePictures');
 		mergeImg([
-			{ src: `./image/${date}-1.png`},
+			{ src: `./image/${date}-1.png` },
 			{ src: `./image/${date}-2.png`, offsetX: -265, offsetY: 227 },
 			{ src: `./image/${date}-3.png`, offsetX: -265, offsetY: 454 }
 		]).then(img => {
@@ -124,30 +125,27 @@ const run = async function() {
 		await fs.unlink(`./image/${date}-3.png`, () =>
 			console.log('deleted 3rd drawing!')
 		);
-    };
-    
-    const sentImageWithWhatsapp = async url =>
-    await client.messages
-        .create({
-            from: 'whatsapp:+14155238886',
-            body: `The Garfield of today! ${date}`,
-            to: `whatsapp:${phone_nr}`,
-            mediaUrl: url
-        })
-        .then(msg => console.log('Msg ID = ', msg.sid))
-        .catch(console.error);
+	};
 
-    const cloudinaryUpload = async () => console.log('cloudinaryUpload');
-    await cloudinary.uploader.upload(`./image/${date}-verticle.png`, function(
-        error,
-        result
-    ) {
-        // image.cloudinaryImageUrl = result.url;
-        error && console.log(error);
-        sentImageWithWhatsapp(result.url);
-    });
-  
+	const sentImageWithWhatsapp = async url =>
+		await client.messages
+			.create({
+				from: 'whatsapp:+14155238886',
+				body: `The Garfield of today! ${date}`,
+				to: `whatsapp:${phone_nr}`,
+				mediaUrl: url
+			})
+			.then(msg => console.log('Msg ID = ', msg.sid))
+			.catch(console.error);
 
+	const cloudinaryUpload = async () =>
+		await cloudinary.uploader.upload(`./image/${date}-verticle.png`, function(
+			error,
+			result
+		) {
+			error && console.log(error);
+			sentImageWithWhatsapp(result.url);
+		});
 
 	let finalResult =
 		webScrape +
@@ -158,7 +156,6 @@ const run = async function() {
 		deleteOriginal() +
 		cloudinaryUpload();
 
-	
 	return await finalResult;
 };
 
