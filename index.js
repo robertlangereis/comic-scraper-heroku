@@ -30,13 +30,6 @@ Nightmare.action('screenshotSelector', screenshotSelector);
 const twilio = require('twilio');
 const client = twilio(api_account, key);
 
-try {
-    fs.mkdirSync(path.join(__dirname, '/sliced/'))
-    fs.mkdirSync(path.join(__dirname, '/image/'))
-  } catch (err) {
-    if (err.code !== 'EEXIST') throw err
-  }
-
 // let image = { cloudinaryImageUrl: '' };
 cloudinary.config({
 	cloud_name: cloud_id,
@@ -79,7 +72,7 @@ const run = async function() {
 		.then(result => {
 			return nightmare
 				.goto(`${result}`)
-				.screenshotSelector({ selector: 'img', path: `app/image/${date}.png` })
+				.screenshotSelector({ selector: 'img', path: `/image/${date}.png` })
 				.end(console.log('webscraper done'));
 		})
 		.catch(error => {
@@ -89,7 +82,7 @@ const run = async function() {
 	const cropFirstPicture = await new Promise(resolve => {
 		console.log('cropFirstPicture');
 		Clipper(`./image/${date}.png`, function() {
-			this.crop(0, 0, 535, 458).toFile(`app/sliced/${date}-1.png`, function() {
+			this.crop(0, 0, 535, 458).toFile(`/sliced/${date}-1.png`, function() {
 				resolve(console.log('saved 1st drawing!'));
 			});
 		});
@@ -97,7 +90,7 @@ const run = async function() {
 	const cropSecondPicture = await new Promise(resolve => {
 		console.log('cropSecondPicture');
 		Clipper(`./image/${date}.png`, function() {
-			this.crop(535, 0, 535, 458).toFile(`app/sliced/${date}-2.png`, function() {
+			this.crop(535, 0, 535, 458).toFile(`/sliced/${date}-2.png`, function() {
 				resolve(console.log('saved 2nd drawing!'));
 			});
 		});
@@ -105,7 +98,7 @@ const run = async function() {
 	const cropThirdPicture = await new Promise(resolve => {
 		console.log('cropThirdPicture');
 		Clipper(`./image/${date}.png`, function() {
-			this.crop(1070, 0, 535, 458).toFile(`app/sliced/${date}-3.png`, function() {
+			this.crop(1070, 0, 535, 458).toFile(`/sliced/${date}-3.png`, function() {
 				resolve(console.log('saved 3rd drawing!'));
 			});
 		});
@@ -114,27 +107,27 @@ const run = async function() {
 	const mergePictures = await new Promise(resolve => {
 		console.log('mergePictures');
 		mergeImg([
-			{ src: `app/sliced/${date}-1.png` },
-			{ src: `app/sliced/${date}-2.png`, offsetX: -535, offsetY: 458 },
-			{ src: `app/sliced/${date}-3.png`, offsetX: -535, offsetY: 916 }
+			{ src: `/sliced/${date}-1.png` },
+			{ src: `/sliced/${date}-2.png`, offsetX: -535, offsetY: 458 },
+			{ src: `/sliced/${date}-3.png`, offsetX: -535, offsetY: 916 }
 		]).then(img => {
-			return img.write(`app/image/${date}-verticle.png`, () =>
+			return img.write(`/image/${date}-verticle.png`, () =>
 				resolve(console.log('done merging images'))
 			);
 		});
 	});
 
 	const deleteOriginal = async () => {
-		await fs.unlink(`app/image/${date}.png`, () =>
+		await fs.unlink(`/image/${date}.png`, () =>
 			console.log('deleted original comic!')
 		);
-		await fs.unlink(`app/sliced/${date}-1.png`, () =>
+		await fs.unlink(`/sliced/${date}-1.png`, () =>
 			console.log('deleted 1st drawing!')
 		);
-		await fs.unlink(`app/sliced/${date}-2.png`, () =>
+		await fs.unlink(`/sliced/${date}-2.png`, () =>
 			console.log('deleted 2nd drawing!')
 		);
-		await fs.unlink(`app/sliced/${date}-3.png`, () =>
+		await fs.unlink(`/sliced/${date}-3.png`, () =>
 			console.log('deleted 3rd drawing!')
 		);
 	};
@@ -152,7 +145,7 @@ const run = async function() {
 		.catch(console.error);
 
 	const cloudinaryUpload = async () => console.log('cloudinaryUpload');
-	await cloudinary.uploader.upload(`app/image/${date}-verticle.png`, function(
+	await cloudinary.uploader.upload(`/image/${date}-verticle.png`, function(
 		error,
 		result
 	) {
