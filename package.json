@@ -20,7 +20,12 @@
 	},
 	"homepage": "https://github.com/oscarmorrison/nightmare-heroku",
 	"dependencies": {
+		"canvas": "^2.6.1",
+		"cheerio": "^1.0.0-rc.3",
 		"electron": "^1.6.10",
-		"nightmare": "^2.10.0"
+		"image-clipper": "^0.4.4",
+		"nightmare": "^2.10.0",
+		"nightmare-screenshot-selector": "^1.0.2",
+		"node-pre-gyp": "0.12.0"
 	}
 }
