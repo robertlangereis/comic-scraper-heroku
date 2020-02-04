@@ -12,4 +12,3 @@ module.exports = {
 	cloud_key: process.env.CLOUD_KEY,
 	cloud_secret: process.env.CLOUD_SECRET
 };
-
