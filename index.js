@@ -30,6 +30,13 @@ Nightmare.action('screenshotSelector', screenshotSelector);
 const twilio = require('twilio');
 const client = twilio(api_account, key);
 
+try {
+    fs.mkdirSync(path.join(__dirname, '/sliced/'))
+    fs.mkdirSync(path.join(__dirname, '/image/'))
+  } catch (err) {
+    if (err.code !== 'EEXIST') throw err
+  }
+
 // let image = { cloudinaryImageUrl: '' };
 cloudinary.config({
 	cloud_name: cloud_id,
