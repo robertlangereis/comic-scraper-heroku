@@ -101,8 +101,7 @@ async function mailComic() {
 		from: sender_email, // sender address
 		to: receiver_email, // list of receivers
 		subject: `The Garfield of today! ${date}`, // Subject line
-		text: `The Garfield of today! ${date}`, // plain text body
-		html: 'Embedded image: <img src="cid:unique@nodemailer.com"/>',
+		html: `The Garfield of today! ${date}: <img src="cid:unique@nodemailer.com"/>`,
 		attachments: [
 			{
 				filename: `${date}-verticle.png`,
