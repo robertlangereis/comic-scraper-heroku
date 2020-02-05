@@ -13,7 +13,8 @@ const {
 	email_password,
 	email_client_id,
 	email_client_secret,
-	access_token
+	access_token,
+	refresh_token
 } = require('./config');
 
 // Clipper allows for the cropping of the comic images
@@ -83,7 +84,7 @@ async function mailComic() {
 			user: sender_email, // Your gmail address.
 			clientId: email_client_id,
 			clientSecret: email_client_secret,
-			refreshToken: refreshToken,
+			refreshToken: refresh_token,
 			expires_in: 3599,
 			access_token: access_token
 		}
