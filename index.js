@@ -70,27 +70,33 @@ const getData = html => {
 // async..await is not allowed in global scope, must use a wrapper
 async function mailComic() {
 	// let smtpTransport = nodemailer.createTransport("SMTP", {
-	let smtpTransport = nodemailer.createTransport({
+
+	// let smtpTransport = nodemailer.createTransport({
+	// 	service: "Gmail",
+	// 	auth: {
+	// 	  XOAuth2: {
+	// 		user: sender_email, // Your gmail address.
+	// 		clientId: "640345018023-sh2dbqji56oe81uum1m917st9hidkdh7.apps.googleusercontent.com",
+	// 		clientSecret: "N7csiVlgC8H4bHhKhNdISqT6",
+	// 		refreshToken: "1//045lxUcji9VIcCgYIARAAGAQSNwF-L9IrAPJzSbDoq1MXCPkrywTnfm3Ud3nOBzdNpvkWswwcWDXJAZaVSdUYm4R2mK_ZXT8N0Is"
+	// 	  }
+	// 	}
+	//   });
+	
+	var smtpTransport = nodemailer.createTransport("SMTP", {
 		service: "Gmail",
 		auth: {
 		  XOAuth2: {
-			user: sender_email, // Your gmail address.
-			clientId: "640345018023-sh2dbqji56oe81uum1m917st9hidkdh7.apps.googleusercontent.com",
-			clientSecret: "N7csiVlgC8H4bHhKhNdISqT6",
-			refreshToken: "1//045lxUcji9VIcCgYIARAAGAQSNwF-L9IrAPJzSbDoq1MXCPkrywTnfm3Ud3nOBzdNpvkWswwcWDXJAZaVSdUYm4R2mK_ZXT8N0Is"
+			user: "your_email_address@gmail.com", // Your gmail address.
+												  // Not @developer.gserviceaccount.com
+			clientId: "your_client_id",
+			clientSecret: "your_client_secret",
+			refreshToken: "your_refresh_token"
 		  }
 		}
 	  });
-	
-	// ({
-	// 	service: 'Gmail',
-	// 	auth: {
-	// 		user: sender_email,
-	// 		pass: email_password
-	// 	}
-	// });
 
-	let info = await smtpTransport.sendMail({
+	  var mailOptions = {
 		from: sender_email, // sender address
 		to: receiver_email, // list of receivers
 		subject: `The Garfield of today! ${date}`, // Subject line
@@ -103,7 +109,33 @@ async function mailComic() {
 				cid: 'unique@nodemailer.com' //same cid value as in the html img src
 			}
 		]
-	});
+	  };
+	  
+	  smtpTransport.sendMail(mailOptions, function(error, response) {
+		if (error) {
+		  console.log(error);
+		} else {
+		  console.log(response);
+		}
+		smtpTransport.close();
+	  });
+	  
+
+
+	// let info = await smtpTransport.sendMail({
+	// 	from: sender_email, // sender address
+	// 	to: receiver_email, // list of receivers
+	// 	subject: `The Garfield of today! ${date}`, // Subject line
+	// 	text: `The Garfield of today! ${date}`, // plain text body
+	// 	html: 'Embedded image: <img src="cid:unique@nodemailer.com"/>',
+	// 	attachments: [
+	// 		{
+	// 			filename: `${date}-verticle.png`,
+	// 			path: `./image/${date}-verticle.png`,
+	// 			cid: 'unique@nodemailer.com' //same cid value as in the html img src
+	// 		}
+	// 	]
+	// });
 	console.log('Message sent: %s', info.messageId);
 	console.log('Preview URL: %s', nodemailer.getTestMessageUrl(info));
 }
