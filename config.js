@@ -10,5 +10,8 @@ module.exports = {
 	key: process.env.KEY,
 	cloud_id: process.env.CLOUD_ID,
 	cloud_key: process.env.CLOUD_KEY,
-	cloud_secret: process.env.CLOUD_SECRET
+	cloud_secret: process.env.CLOUD_SECRET,
+	sender_email: process.env.SENDER_EMAIL,
+	receiver_email: process.env.RECEIVER_EMAIL,
+	email_password: process.env.EMAIL_PASSWORD
 };
