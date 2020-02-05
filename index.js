@@ -69,7 +69,8 @@ const getData = html => {
 
 // async..await is not allowed in global scope, must use a wrapper
 async function mailComic() {
-	let transporter = nodemailer.createTransport("SMTP", {
+	// let smtpTransport = nodemailer.createTransport("SMTP", {
+	let smtpTransport = nodemailer.createTransport({
 		service: "Gmail",
 		auth: {
 		  XOAuth2: {
@@ -89,7 +90,7 @@ async function mailComic() {
 	// 	}
 	// });
 
-	let info = await transporter.sendMail({
+	let info = await smtpTransport.sendMail({
 		from: sender_email, // sender address
 		to: receiver_email, // list of receivers
 		subject: `The Garfield of today! ${date}`, // Subject line
