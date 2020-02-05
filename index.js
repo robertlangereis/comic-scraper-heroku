@@ -10,7 +10,10 @@ const {
 	cloud_secret,
 	sender_email,
 	receiver_email,
-	email_password
+	email_password,
+	email_client_id,
+	email_client_secret,
+	access_token
 } = require('./config');
 
 // Clipper allows for the cropping of the comic images
@@ -69,20 +72,36 @@ const getData = html => {
 
 // async..await is not allowed in global scope, must use a wrapper
 async function mailComic() {
-	let transporter = nodemailer.createTransport({
-		service: 'Gmail',
+	// let smtpTransport = nodemailer.createTransport("SMTP", {
+	let smtpTransport = nodemailer.createTransport({
+		host: 'smtp.gmail.com',
+		port: 465,
+		secure: true,
+		// service: "Gmail",
 		auth: {
-			user: sender_email,
-			pass: email_password
+			type: 'OAuth2',
+			user: sender_email, // Your gmail address.
+			clientId: email_client_id,
+			clientSecret: email_client_secret,
+			refreshToken: refreshToken,
+			expires_in: 3599,
+			access_token: access_token
 		}
 	});
 
-	let info = await transporter.sendMail({
+	// ({
+	// 	service: 'Gmail',
+	// 	auth: {
+	// 		user: sender_email,
+	// 		pass: email_password
+	// 	}
+	// });
+
+	let info = await smtpTransport.sendMail({
 		from: sender_email, // sender address
 		to: receiver_email, // list of receivers
 		subject: `The Garfield of today! ${date}`, // Subject line
-		text: `The Garfield of today! ${date}`, // plain text body
-		html: 'Embedded image: <img src="cid:unique@nodemailer.com"/>',
+		html: `The Garfield of today! ${date}: <img src="cid:unique@nodemailer.com"/>`,
 		attachments: [
 			{
 				filename: `${date}-verticle.png`,
@@ -91,7 +110,6 @@ async function mailComic() {
 			}
 		]
 	});
-
 	console.log('Message sent: %s', info.messageId);
 	console.log('Preview URL: %s', nodemailer.getTestMessageUrl(info));
 }
@@ -157,8 +175,12 @@ const run = async function() {
 		await fs.unlink(`./image/${date}-2.png`, () =>
 			console.log('deleted 2nd drawing!')
 		);
-		await fs.unlink(`./image/${date}-3.png`, () =>
-			console.log('deleted 3rd drawing!')
+		await fs.unlink(
+			`./image/${date}-3.png`,
+			() => console.log('deleted 3rd drawing!'),
+			console.log('sender_email', sender_email),
+			console.log('email_password', email_password),
+			console.log('receiver_email', receiver_email)
 		);
 	};
 
