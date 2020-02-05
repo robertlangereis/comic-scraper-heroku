@@ -158,10 +158,10 @@ const run = async function() {
 		);
 		await fs.unlink(`./image/${date}-3.png`, () =>
 			console.log('deleted 3rd drawing!')
+			console.log('sender_email', sender_email);
+			console.log('email_password', email_password);
+			console.log('receiver_email', receiver_email);
 		);
-		console.log('sender_email', sender_email);
-		console.log('email_password', email_password);
-		console.log('receiver_email', receiver_email);
 	};
 
 	const sentImageWithWhatsapp = async url =>
