@@ -73,15 +73,13 @@ const getData = html => {
 
 // async..await is not allowed in global scope, must use a wrapper
 async function mailComic() {
-	// let smtpTransport = nodemailer.createTransport("SMTP", {
 	let smtpTransport = nodemailer.createTransport({
 		host: 'smtp.gmail.com',
 		port: 465,
 		secure: true,
-		// service: "Gmail",
 		auth: {
 			type: 'OAuth2',
-			user: sender_email, // Your gmail address.
+			user: sender_email,
 			clientId: email_client_id,
 			clientSecret: email_client_secret,
 			refreshToken: refresh_token,
@@ -90,24 +88,16 @@ async function mailComic() {
 		}
 	});
 
-	// ({
-	// 	service: 'Gmail',
-	// 	auth: {
-	// 		user: sender_email,
-	// 		pass: email_password
-	// 	}
-	// });
-
 	let info = await smtpTransport.sendMail({
-		from: sender_email, // sender address
-		to: receiver_email, // list of receivers
-		subject: `The Garfield of today! ${date}`, // Subject line
+		from: sender_email,
+		to: receiver_email,
+		subject: `The Garfield of today! ${date}`,
 		html: `The Garfield of today! ${date}: <img src="cid:unique@nodemailer.com"/>`,
 		attachments: [
 			{
 				filename: `${date}-verticle.png`,
 				path: `./image/${date}-verticle.png`,
-				cid: 'unique@nodemailer.com' //same cid value as in the html img src
+				cid: 'unique@nodemailer.com'
 			}
 		]
 	});
