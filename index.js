@@ -10,7 +10,10 @@ const {
 	cloud_secret,
 	sender_email,
 	receiver_email,
-	email_password
+	email_password,
+	email_client_id,
+	email_client_secret,
+	access_token
 } = require('./config');
 
 // Clipper allows for the cropping of the comic images
@@ -78,14 +81,14 @@ async function mailComic() {
 		auth: {
 			type: 'OAuth2',
 			user: sender_email, // Your gmail address.
-			clientId: "640345018023-sh2dbqji56oe81uum1m917st9hidkdh7.apps.googleusercontent.com",
-			clientSecret: "N7csiVlgC8H4bHhKhNdISqT6",
-			refreshToken: "1//045lxUcji9VIcCgYIARAAGAQSNwF-L9IrAPJzSbDoq1MXCPkrywTnfm3Ud3nOBzdNpvkWswwcWDXJAZaVSdUYm4R2mK_ZXT8N0Is",
+			clientId: email_client_id,
+			clientSecret: email_client_secret,
+			refreshToken: refreshToken,
 			expires_in: 3599,
-			access_token: "ya29.Il-8B2G8tFKr3RzSGt7HqNRKs3r4bYLQvALiJ9fQqD2yBeJh714fuiL-BajhWiHu27F4hMjYAkM6-ikdv44rrBiTVbPotdzmGsUEtEX_dJR_0c_Htv_NpSFbDAzTHG7ZDQ"
+			access_token: access_token
 		}
-	  });
-	
+	});
+
 	// ({
 	// 	service: 'Gmail',
 	// 	auth: {
@@ -173,8 +176,9 @@ const run = async function() {
 		await fs.unlink(`./image/${date}-2.png`, () =>
 			console.log('deleted 2nd drawing!')
 		);
-		await fs.unlink(`./image/${date}-3.png`, () =>
-			console.log('deleted 3rd drawing!'),
+		await fs.unlink(
+			`./image/${date}-3.png`,
+			() => console.log('deleted 3rd drawing!'),
 			console.log('sender_email', sender_email),
 			console.log('email_password', email_password),
 			console.log('receiver_email', receiver_email)
