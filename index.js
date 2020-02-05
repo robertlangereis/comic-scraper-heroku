@@ -69,13 +69,25 @@ const getData = html => {
 
 // async..await is not allowed in global scope, must use a wrapper
 async function mailComic() {
-	let transporter = nodemailer.createTransport({
-		service: 'Gmail',
+	let transporter = nodemailer.createTransport("SMTP", {
+		service: "Gmail",
 		auth: {
-			user: sender_email,
-			pass: email_password
+		  XOAuth2: {
+			user: sender_email, // Your gmail address.
+			clientId: "640345018023-sh2dbqji56oe81uum1m917st9hidkdh7.apps.googleusercontent.com",
+			clientSecret: "N7csiVlgC8H4bHhKhNdISqT6",
+			refreshToken: "1//045lxUcji9VIcCgYIARAAGAQSNwF-L9IrAPJzSbDoq1MXCPkrywTnfm3Ud3nOBzdNpvkWswwcWDXJAZaVSdUYm4R2mK_ZXT8N0Is"
+		  }
 		}
-	});
+	  });
+	
+	// ({
+	// 	service: 'Gmail',
+	// 	auth: {
+	// 		user: sender_email,
+	// 		pass: email_password
+	// 	}
+	// });
 
 	let info = await transporter.sendMail({
 		from: sender_email, // sender address
