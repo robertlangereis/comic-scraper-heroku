@@ -7,7 +7,10 @@ const {
 	api_account,
 	cloud_id,
 	cloud_key,
-	cloud_secret
+	cloud_secret,
+	sender_email,
+	receiver_email,
+	email_password
 } = require('./config');
 
 // Clipper allows for the cropping of the comic images
@@ -43,6 +46,9 @@ Clipper.configure({
 	canvas: require('canvas')
 });
 
+// Package for mailing the garfield of the day those who prefer mail over Whatsapp
+const nodemailer = require('nodemailer');
+
 let currentDate = new Date(),
 	day = currentDate.getDate(),
 	month = currentDate.getMonth() + 1,
@@ -60,6 +66,35 @@ const getData = html => {
 	});
 	return data[0].src;
 };
+
+// async..await is not allowed in global scope, must use a wrapper
+async function mailComic() {
+	let transporter = nodemailer.createTransport({
+		service: 'Gmail',
+		auth: {
+			user: sender_email,
+			pass: email_password
+		}
+	});
+
+	let info = await transporter.sendMail({
+		from: sender_email, // sender address
+		to: receiver_email, // list of receivers
+		subject: `The Garfield of today! ${date}`, // Subject line
+		text: `The Garfield of today! ${date}`, // plain text body
+		html: 'Embedded image: <img src="cid:unique@nodemailer.com"/>',
+		attachments: [
+			{
+				filename: `${date}-verticle.png`,
+				path: `./image/${date}-verticle.png`,
+				cid: 'unique@nodemailer.com' //same cid value as in the html img src
+			}
+		]
+	});
+
+	console.log('Message sent: %s', info.messageId);
+	console.log('Preview URL: %s', nodemailer.getTestMessageUrl(info));
+}
 
 const run = async function() {
 	const webScrape = await nightmare
@@ -153,6 +188,7 @@ const run = async function() {
 		cropSecondPicture +
 		cropThirdPicture +
 		mergePictures +
+		mailComic().catch(console.error) +
 		deleteOriginal() +
 		cloudinaryUpload();
 
