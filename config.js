@@ -17,5 +17,6 @@ module.exports = {
 	email_client_id:process.env.EMAIL_CLIENT_ID,
 	email_client_secret:process.env.EMAIL_CLIENT_SECRET,
 	refresh_token:process.env.REFRESH_TOKEN,
-	access_token:process.env.ACCESS_TOKEN
+	access_token:process.env.ACCESS_TOKEN,
+	expires_in:process.env.EXPIRS_IN
 };
