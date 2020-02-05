@@ -76,7 +76,7 @@ async function mailComic() {
 			pass: email_password
 		}
 	});
-	
+
 	let info = await transporter.sendMail({
 		from: sender_email, // sender address
 		to: receiver_email, // list of receivers
@@ -91,10 +91,6 @@ async function mailComic() {
 			}
 		]
 	});
-	console.log('sender_email', sender_email);
-	console.log('email_password', email_password);
-	console.log('receiver_email', receiver_email);
-	
 	console.log('Message sent: %s', info.messageId);
 	console.log('Preview URL: %s', nodemailer.getTestMessageUrl(info));
 }
@@ -163,6 +159,9 @@ const run = async function() {
 		await fs.unlink(`./image/${date}-3.png`, () =>
 			console.log('deleted 3rd drawing!')
 		);
+		console.log('sender_email', sender_email);
+		console.log('email_password', email_password);
+		console.log('receiver_email', receiver_email);
 	};
 
 	const sentImageWithWhatsapp = async url =>
