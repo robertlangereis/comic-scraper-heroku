@@ -60,6 +60,8 @@ let currentDate = new Date(),
 	year = currentDate.getFullYear(),
 	date = day + '-' + month + '-' + year;
 
+const today = currentDate.getDay()
+
 const getData = html => {
 	const $ = cheerio.load(html);
 	let data = [];
@@ -107,6 +109,7 @@ async function mailComic() {
 }
 
 const run = async function() {
+	if (today === 0) return
 	const webScrape = await nightmare
 		.goto(listing_url)
 		.wait('.gc-card__image.gc-card__image--overlay')
