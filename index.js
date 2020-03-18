@@ -1,7 +1,6 @@
 //import the environment variables from the config file
 const {
 	listing_url,
-	phone_nr,
 	image_today,
 	key,
 	api_account,
@@ -9,8 +8,6 @@ const {
 	cloud_key,
 	cloud_secret,
 	sender_email,
-	receiver_email,
-	email_password,
 	email_client_id,
 	email_client_secret,
 	access_token,
@@ -19,9 +16,6 @@ const {
 } = require('./config');
 
 const fireBaseRetrieve = require('./fireBase.js');
-
-// const subscribers = fireBaseRetrieve.dataRetrieve();
-// console.log('subscribers', subscribers.subscribersList);
 
 // Clipper allows for the cropping of the comic images
 const Clipper = require('image-clipper');
@@ -175,18 +169,14 @@ const run = async function() {
 		await fs.unlink(`./image/${date}-2.png`, () =>
 			console.log('deleted 2nd drawing!')
 		);
-		await fs.unlink(
-			`./image/${date}-3.png`,
-			() => console.log('deleted 3rd drawing!'),
-			console.log('sender_email', sender_email),
-			console.log('email_password', email_password),
-			console.log('receiver_email', receiver_email)
+		await fs.unlink(`./image/${date}-3.png`, () =>
+			console.log('deleted 3rd drawing!')
 		);
 	};
 
 	const sentImageWithWhatsapp = async url =>
 		await fireBaseRetrieve.phoneNumberList.map(number => {
-			console.log(number, 'number in function');
+			console.log('sending to phonenumber', number);
 			client.messages
 				.create({
 					from: 'whatsapp:+14155238886',
@@ -218,9 +208,6 @@ const run = async function() {
 		cloudinaryUpload();
 	return await finalResult;
 };
-
-
-
 
 try {
 	run();
