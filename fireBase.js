@@ -33,19 +33,25 @@ const dataRetrieve = async () =>
 	);
 exports.dataRetrieve = dataRetrieve;
 
+const emailList = [];
+const phoneNumberList = [];
 const emailRetrieve = async () =>
 	await ref.on(
 		'value',
 		function(snapshot) {
 			const jsonObject = snapshot.val();
-			const emailList = [];
-			Object.values(jsonObject).map(subscriber =>
-				emailList.push(subscriber.email)
-			);
-			return emailList.join(", ")
+			Object.values(jsonObject).map(subscriber => {
+				if (subscriber.email !== '') emailList.push(subscriber.email);
+				if (subscriber.phone !== '') phoneNumberList.push(subscriber.phone);
+			});
+			emailList.join(', ');
+			console.log(emailList, 'in functie');
+			exports.emailList = emailList;
 		},
 		function(errorObject) {
 			console.log('The read failed: ' + errorObject.code);
 		}
 	);
 exports.emailRetrieve = emailRetrieve;
+exports.emailList = emailList;
+exports.phoneNumberList = phoneNumberList;
