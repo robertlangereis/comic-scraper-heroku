@@ -18,6 +18,11 @@ const {
 	expires_in
 } = require('./config');
 
+const fireBaseRetrieve = require('./fireBase.js');
+
+// const subscribers = fireBaseRetrieve.dataRetrieve();
+// console.log('subscribers', subscribers.subscribersList);
+
 // Clipper allows for the cropping of the comic images
 const Clipper = require('image-clipper');
 
@@ -60,7 +65,7 @@ let currentDate = new Date(),
 	year = currentDate.getFullYear(),
 	date = day + '-' + month + '-' + year;
 
-const today = currentDate.getDay()
+const today = currentDate.getDay();
 
 const getData = html => {
 	const $ = cheerio.load(html);
@@ -73,9 +78,10 @@ const getData = html => {
 	});
 	return data[0].src;
 };
-
 // async..await is not allowed in global scope, must use a wrapper
 async function mailComic() {
+	await fireBaseRetrieve.emailRetrieve();
+	console.log('emailList', fireBaseRetrieve.emailList);
 	let smtpTransport = nodemailer.createTransport({
 		host: 'smtp.gmail.com',
 		port: 465,
@@ -90,12 +96,11 @@ async function mailComic() {
 			access_token: access_token
 		}
 	});
-
 	let info = await smtpTransport.sendMail({
 		from: sender_email,
-		to: receiver_email,
 		subject: `The Garfield of today! ${date}`,
-		html: `The Garfield of today! ${date}: <img src="cid:unique@nodemailer.com"/>`,
+		html: `<h3>The Garfield of today! ${date}:</h3> <br/> <img src="cid:unique@nodemailer.com"/>`,
+		to: fireBaseRetrieve.emailList,
 		attachments: [
 			{
 				filename: `${date}-verticle.png`,
@@ -109,7 +114,7 @@ async function mailComic() {
 }
 
 const run = async function() {
-	if (today === 0) return
+	if (today === 0) return;
 	const webScrape = await nightmare
 		.goto(listing_url)
 		.wait('.gc-card__image.gc-card__image--overlay')
@@ -180,15 +185,18 @@ const run = async function() {
 	};
 
 	const sentImageWithWhatsapp = async url =>
-		await client.messages
-			.create({
-				from: 'whatsapp:+14155238886',
-				body: `The Garfield of today! ${date}`,
-				to: `whatsapp:${phone_nr}`,
-				mediaUrl: url
-			})
-			.then(msg => console.log('Msg ID = ', msg.sid))
-			.catch(console.error);
+		await fireBaseRetrieve.phoneNumberList.map(number => {
+			console.log(number, 'number in function');
+			client.messages
+				.create({
+					from: 'whatsapp:+14155238886',
+					body: `Your Garfield code is ${date}`,
+					to: `whatsapp:${number}`,
+					mediaUrl: url
+				})
+				.then(msg => console.log('Msg ID = ', msg.sid))
+				.catch(console.error);
+		});
 
 	const cloudinaryUpload = async () =>
 		await cloudinary.uploader.upload(`./image/${date}-verticle.png`, function(
@@ -208,9 +216,11 @@ const run = async function() {
 		mailComic().catch(console.error) +
 		deleteOriginal() +
 		cloudinaryUpload();
-
 	return await finalResult;
 };
+
+
+
 
 try {
 	run();
