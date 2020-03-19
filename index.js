@@ -15,6 +15,8 @@ const {
 	expires_in
 } = require('./config');
 
+const axios = require('axios');
+
 const fireBaseRetrieve = require('./fireBase.js');
 
 // Clipper allows for the cropping of the comic images
@@ -184,7 +186,22 @@ const run = async function() {
 					to: `whatsapp:${number}`,
 					mediaUrl: url
 				})
-				.then(msg => console.log('Msg ID = ', msg.sid))
+				.then(msg => {
+					// console.log('Msg ID = ', msg.sid);
+					const statusCode = msg.status;
+					console.log('statusCode', statusCode);
+					axios
+						.post('https://timberwolf-mastiff-9776.twil.io/demo-reply', {
+							statusCode
+						})
+						.then(res => {
+							console.log(`statusCode: ${res.status}`);
+							// console.log(res);
+						})
+						.catch(error => {
+							console.error(error);
+						});
+				})
 				.catch(console.error);
 		});
 

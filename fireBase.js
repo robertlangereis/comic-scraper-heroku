@@ -45,7 +45,6 @@ const emailRetrieve = async () =>
 				if (subscriber.phone !== '') phoneNumberList.push(subscriber.phone);
 			});
 			emailList.join(', ');
-			console.log(emailList, 'in functie');
 			exports.emailList = emailList;
 		},
 		function(errorObject) {
