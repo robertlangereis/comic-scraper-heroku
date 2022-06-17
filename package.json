@@ -23,7 +23,7 @@
 		"canvas": "^2.6.1",
 		"cheerio": "^1.0.0-rc.3",
 		"cloudinary": "^1.19.0",
-		"electron": "^1.6.10",
+		"electron": "^15.5.5",
 		"express": "^4.17.1",
 		"firebase-admin": "^8.10.0",
 		"image-clipper": "^0.4.4",
