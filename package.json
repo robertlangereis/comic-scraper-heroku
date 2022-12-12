@@ -24,7 +24,7 @@
 		"cheerio": "^1.0.0-rc.3",
 		"cloudinary": "^1.19.0",
 		"electron": "^1.6.10",
-		"express": "^4.17.1",
+		"express": "^4.17.3",
 		"firebase-admin": "^8.10.0",
 		"image-clipper": "^0.4.4",
 		"merge-img": "^2.1.3",
